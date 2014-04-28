@@ -15,10 +15,6 @@ password=$(cat /srv/gitlab/config/database.yml | grep -m 1 password | sed -e 's/
 
 # === Delete this section if restoring data from previous build ===
 
-# Precompile assets
-cd /home/git/gitlab
-su git -c "bundle exec rake assets:precompile RAILS_ENV=production"
-
 rm -R /srv/gitlab/data/mysql
 mv /var/lib/mysql-tmp /srv/gitlab/data/mysql
 
@@ -35,6 +31,10 @@ echo "CREATE DATABASE IF NOT EXISTS gitlabhq_production DEFAULT CHARACTER SET \
 echo "GRANT SELECT, LOCK TABLES, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, \
   ALTER ON gitlabhq_production.* TO 'git'@'localhost';" | mysql \
     --user=root --password=$mysqlRoot
+
+# Precompile assets
+cd /home/git/gitlab
+su git -c "bundle exec rake assets:precompile RAILS_ENV=production"
 
 cd /home/git/gitlab
 su git -c "bundle exec rake gitlab:setup force=yes RAILS_ENV=production"

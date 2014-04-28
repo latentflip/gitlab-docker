@@ -1,6 +1,6 @@
 # GitLab Docker Build Script
 
-This Dockerfile will create a new Docker container running GitLab 6.4 on Ubuntu 12.04.
+This Dockerfile will create a new Docker container running GitLab 6.4 on Ubuntu 12.04  It is forked from [crashsystems/gitlab-docker](crashsystems's version) that I couldn't get working
 
 ## Installation
 
@@ -16,13 +16,14 @@ With Docker installed and running, do one of the following to obtain GitLab.
 
 **Pull From Docker Index:**
 
-    docker pull crashsystems/gitlab-docker
+    docker pull wraithgar/gitlab-docker
 
 **Build It Yourself**
 
-    git clone https://github.com/crashsystems/gitlab-docker.git
-    cd gitlab-docker
-    docker build -t gitlab .
+```shell
+$ git clone https://github.com/wraithgar/gitlab-docker.git gitlab
+$ cd gitlab-docker
+$ docker build -t gitlab .
 
 Note that since GitLab has a large number of dependencies, both pulling from the index or running the build process will take a while, although pulling should be somewhat faster.
 
@@ -30,7 +31,7 @@ Note that since GitLab has a large number of dependencies, both pulling from the
 
 If you obtained the image via docker pull and therefore didn't clone the GitHub repo, go ahead and do so at this time. The config/ folder of the repository contains configuration files you will need to edit before creating a new container instance.
 
-* **gitlab.yml**: Change the host field to match the hostname for your GitLab instance. Under *Advanced settings* in the config file, change the *ssh_port* setting for GitLab Shell to the port on the Docker host that's mapped to port 22 for this container. If you are using a non-standard port and don't do this, you won't be able to commit changes through a git/SSH url. Also, make any additional changes, such as LDAP configs etc, at this time.
+* **gitlab.yml**: Change the host field to match the hostname for your GitLab instance. Under *Advanced settings* in the config file, change the *ssh_port* setting for GitLab Shell to a port you want to forward from the Docker host to port 22 for this container, you will need that port number a little later so write it down. On a piece of paper. If you don't do this, you won't be able to commit changes through a git/SSH url. Also, make any additional changes, such as LDAP configs etc, at this time.
 * **database.yml**: In the *production* section, set a good password for the gitlab MySQL password.
 * **nginx**: Replace YOUR_SERVER_FQDN with the hostname for your GitLab instance. Also, this file can be used to configure other things, such as SSL/TLS configurations.
 
@@ -44,13 +45,14 @@ To create the container instance, run the following:
 
     cd /path/to/gitlab-docker
 
+Remember that port number you wrote down? You're going to need it now.  In the example below I've used 1234 but it can be whatever.
 Next, run this if you pulled the image from the Docker index:
 
-    docker run -d -v /path/to/gitlab-docker:/srv/gitlab -name gitlab crashsystems/gitlab-docker
+    docker run -d -p 1234:22 -v /path/to/gitlab-docker:/srv/gitlab -name gitlab crashsystems/gitlab-docker
 
 Or this if you built it yourself:
 
-    docker run -d -v /path/to/gitlab-docker:/srv/gitlab -name gitlab gitlab
+    docker run -p 1234:22 -d -v /path/to/gitlab-docker:/srv/gitlab -name gitlab gitlab
 
 */path/to/gitlab-docker* represents the folder created by the git clone on the Docker host, and will contain the GitLab instance's data. Make sure to move it to your desired location before running the container. Also, the first boot of the container will take a bit longer, as the firstrun.sh script will be invoked to perform various initialization tasks.
 

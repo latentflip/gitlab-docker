@@ -41,9 +41,10 @@ ln -s /srv/gitlab/data/mysql /var/lib/mysql
 
 # Run the firstrun script
 /srv/gitlab/firstrun.sh
+[[ -s "/srv/gitlab/firstrun.sh" ]] && source "/srv/gitlab/firstrun.sh"
 
-# start mysql
-mysqld_safe &
+# start mysql (unless firstrun did it first)
+[[ ! -s "/srv/gitlab/firstrun.sh" ]] && mysqld_safe &
 
 # start gitlab
 service gitlab start
