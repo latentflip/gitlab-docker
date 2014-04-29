@@ -17,8 +17,6 @@ rm /home/git/gitlab/tmp/pids/*
 
 # Copy over config files
 cp /srv/gitlab/config/gitlab.yml /home/git/gitlab/config/gitlab.yml
-cp /srv/gitlab/config/nginx /etc/nginx/sites-available/gitlab
-ln -s /etc/nginx/sites-available/gitlab /etc/nginx/sites-enabled/gitlab
 cp /srv/gitlab/config/database.yml /home/git/gitlab/config/database.yml
 chown git:git /home/git/gitlab/config/database.yml && chmod o-rwx /home/git/gitlab/config/database.yml
 
@@ -35,24 +33,19 @@ sed -i 's/^timeout .*/timeout 300/' /home/git/gitlab/config/unicorn.rb
 # Change repo path in gitlab-shell config
 sed -i -e 's/\/home\/git\/repositories/\/srv\/gitlab\/data\/repositories/g' /home/git/gitlab-shell/config.yml
 
-# Link MySQL dir to /srv/gitlab/data
-mv /var/lib/mysql /var/lib/mysql-tmp
-ln -s /srv/gitlab/data/mysql /var/lib/mysql
+# Link Postgres dir to /srv/gitlab/data
+mv /var/lib/postgresql /var/lib/postgresql-tmp
+ln -s /srv/gitlab/data/postgresql /var/lib/postgresql
 
 # Run the firstrun script
 /srv/gitlab/firstrun.sh
 [[ -s "/srv/gitlab/firstrun.sh" ]] && source "/srv/gitlab/firstrun.sh"
 
-# start mysql (unless firstrun did it first)
-[[ ! -s "/srv/gitlab/firstrun.sh" ]] && mysqld_safe &
+# start postgres
+service postgresql start
 
 # start gitlab
 service gitlab start
-
-# start nginx
-service nginx start
-
-sleep 5
 
 # keep script in foreground
 su git -c "touch /home/git/gitlab/log/production.log"
