@@ -30,7 +30,7 @@ Edit the following files in your cloned gitlab folder:
 
 * **gitlab.yml**: Change the host field to match the hostname for your GitLab instance. Under *Advanced settings* in the config file, change the *ssh_port* setting for GitLab Shell to a port you want to forward from the Docker host to port 22 for this container, you will need that port number a little later so write it down. On a piece of paper. If you don't do this, you won't be able to commit changes through a git/SSH url. Also, make any additional changes, such as LDAP configs etc, at this time.
 * **database.yml**: In the *production* section, set a good password for the gitlab MySQL password.
-* **nginx**: Replace YOUR_SERVER_FQDN with the hostname for your GitLab instance. Also, this file can be used to configure other things, such as SSL/TLS configurations.
+* **nginx**: Replace YOUR\_SERVER\_FQDN with the hostname for your GitLab instance. Replace PATH\_TO\_GITLAB\_DOCKER with the directory you checked the gitlab-docker repo into
 
 In addition, set the mysqlRoot variable in firstrun.sh to a good password for your MySQL root user.
 
