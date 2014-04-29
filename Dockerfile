@@ -12,11 +12,13 @@ RUN echo deb http://us.archive.ubuntu.com/ubuntu/ precise universe multiverse >>
   apt-get install -y build-essential zlib1g-dev libyaml-dev libssl-dev libgdbm-dev libreadline-dev libncurses5-dev libffi-dev curl openssh-server redis-server checkinstall libxml2-dev libxslt-dev libcurl4-openssl-dev libicu-dev sudo python-docutils logrotate vim postfix git-core postgresql-9.3 postgresql-client libpq-dev
 
 # Install Ruby
+# For info on that patch to readline see this super cool issue https://github.com/sstephenson/ruby-build/issues/526
 RUN mkdir /tmp/ruby;\
   cd /tmp/ruby;\
   curl ftp://ftp.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0-p451.tar.gz | tar xz;\
   cd ruby-2.0.0-p451;\
   chmod +x configure;\
+  curl https://gist.githubusercontent.com/riocampos/b2669b26016207224f06/raw/0d3c9229eb1083ae08080b21bdf0a7ebaeda5113/readline.patch|patch -p0
   ./configure --disable-install-rdoc;\
   make;\
   make install;\

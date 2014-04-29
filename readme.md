@@ -26,7 +26,7 @@ Note that since GitLab has a large number of dependencies, the build process wil
 
 ### Step 2: Configure GitLab
 
-If you obtained the image via docker pull and therefore didn't clone the GitHub repo, go ahead and do so at this time. The config/ folder of the repository contains configuration files you will need to edit before creating a new container instance.
+Edit the following files in your cloned gitlab folder:
 
 * **gitlab.yml**: Change the host field to match the hostname for your GitLab instance. Under *Advanced settings* in the config file, change the *ssh_port* setting for GitLab Shell to a port you want to forward from the Docker host to port 22 for this container, you will need that port number a little later so write it down. On a piece of paper. If you don't do this, you won't be able to commit changes through a git/SSH url. Also, make any additional changes, such as LDAP configs etc, at this time.
 * **database.yml**: In the *production* section, set a good password for the gitlab MySQL password.
