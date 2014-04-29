@@ -4,14 +4,13 @@
 /bin/rm /etc/ssh/ssh_host_*
 dpkg-reconfigure openssh-server
 
-password=$(cat /srv/gitlab/config/database.yml | grep -m 1 password | sed -e 's/  password: "//g' | sed -e 's/"//g')
-
-# ==============================================
-
-# === Delete this section if restoring data from previous build ===
-
+# Persiste postgres onto host
 rm -R /srv/gitlab/data/postgresql
 mv /var/lib/postgresql-tmp /srv/gitlab/data/postgresql
+
+# Persist gitlab/public onto host (for nginx to serve)
+rm -R /srv/gitlab/data/gitlab-public
+mv /home/git/gitlab/public-tmp /srv/gitlab/data/gitlab-public
 
 # Start postgres
 service postgresql start
@@ -30,6 +29,3 @@ sleep 5
 su git -c "bundle exec rake db:seed_fu RAILS_ENV=production"
 
 # ================================================================
-
-# Delete firstrun script
-rm /srv/gitlab/firstrun.sh

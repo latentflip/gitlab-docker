@@ -39,18 +39,18 @@ sed -i -e 's/\/home\/git\/repositories/\/srv\/gitlab\/data\/repositories/g' /hom
 mv /var/lib/postgresql /var/lib/postgresql-tmp
 ln -s /srv/gitlab/data/postgresql /var/lib/postgresql
 
+# Link gitlab public dir to /srv/gitlab/data
+mv /home/git/gitlab/public /home/git/gitlab/public-tmp
+ln -s /srv/gitlab/data/gitlab_public /home/git/gitlab/public
+
 # Run the firstrun script
-/srv/gitlab/firstrun.sh
-[[ -s "/srv/gitlab/firstrun.sh" ]] && source "/srv/gitlab/firstrun.sh"
+[[ -s "/srv/gitlab/firstrun.sh" ]] && source "/srv/gitlab/firstrun.sh" && "rm /srv/gitlab/firstrun.sh"
 
 # start postgres
 service postgresql start
 
 # start gitlab
 service gitlab start
-
-# start nginx
-service nginx start
 
 # keep script in foreground
 su git -c "touch /home/git/gitlab/log/production.log"
