@@ -12,11 +12,7 @@ Follow these instructions to download or build GitLab.
 
 ### Step 1: Pull Or Build GitLab
 
-With Docker installed and running, do one of the following to obtain GitLab.
-
-**Pull From Docker Index:**
-
-    docker pull wraithgar/gitlab-docker
+With Docker installed and running, do the following to obtain GitLab.
 
 **Build It Yourself**
 
@@ -24,8 +20,9 @@ With Docker installed and running, do one of the following to obtain GitLab.
 $ git clone https://github.com/wraithgar/gitlab-docker.git gitlab
 $ cd gitlab-docker
 $ docker build -t gitlab .
+```
 
-Note that since GitLab has a large number of dependencies, both pulling from the index or running the build process will take a while, although pulling should be somewhat faster.
+Note that since GitLab has a large number of dependencies, the build process will take a while.
 
 ### Step 2: Configure GitLab
 

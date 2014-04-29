@@ -1,7 +1,6 @@
-FROM ubuntu:12.04
-ENV MYSQLTMPROOT temprootpass
+FROM ubuntu:14.04
 
-# Run upgrades
+# Run upgrades and dependencies
 RUN echo deb http://us.archive.ubuntu.com/ubuntu/ precise universe multiverse >> /etc/apt/sources.list;\
   echo deb http://us.archive.ubuntu.com/ubuntu/ precise-updates main restricted universe >> /etc/apt/sources.list;\
   echo deb http://security.ubuntu.com/ubuntu precise-security main restricted universe >> /etc/apt/sources.list;\
@@ -9,21 +8,14 @@ RUN echo deb http://us.archive.ubuntu.com/ubuntu/ precise universe multiverse >>
   echo initscripts hold | dpkg --set-selections;\
   echo upstart hold | dpkg --set-selections;\
   apt-get update;\
-  apt-get -y upgrade
-
-# Install dependencies
-RUN apt-get install -y build-essential zlib1g-dev libyaml-dev libssl-dev libgdbm-dev libreadline-dev libncurses5-dev libffi-dev curl openssh-server redis-server checkinstall libxml2-dev libxslt-dev libcurl4-openssl-dev libicu-dev sudo python python-docutils python-software-properties nginx logrotate sendmail
-
-# Install Git
-RUN add-apt-repository -y ppa:git-core/ppa;\
-  apt-get update;\
-  apt-get -y install git
+  apt-get -y upgrade;\
+  apt-get install -y build-essential zlib1g-dev libyaml-dev libssl-dev libgdbm-dev libreadline-dev libncurses5-dev libffi-dev curl openssh-server redis-server checkinstall libxml2-dev libxslt-dev libcurl4-openssl-dev libicu-dev sudo python-docutils logrotate vim postfix git-core postgresql-9.3 postgresql-client libpq-dev
 
 # Install Ruby
 RUN mkdir /tmp/ruby;\
   cd /tmp/ruby;\
-  curl ftp://ftp.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0-p247.tar.gz | tar xz;\
-  cd ruby-2.0.0-p247;\
+  curl ftp://ftp.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0-p451.tar.gz | tar xz;\
+  cd ruby-2.0.0-p451;\
   chmod +x configure;\
   ./configure --disable-install-rdoc;\
   make;\
@@ -35,20 +27,14 @@ RUN adduser --disabled-login --gecos 'GitLab' git
 
 # Install GitLab Shell
 RUN cd /home/git;\
-  su git -c "git clone https://github.com/gitlabhq/gitlab-shell.git -b v1.8.0";\
+  su git -c "git clone https://gitlab.com/gitlab-org/gitlab-shell.git -b v1.9.3";\
   cd gitlab-shell;\
-  su git -c "cp config.yml.example config.yml";\
   sed -i -e 's/localhost/127.0.0.1/g' config.yml;\
   su git -c "./bin/install"
 
-# Install MySQL
-RUN echo mysql-server mysql-server/root_password password $MYSQLTMPROOT | debconf-set-selections;\
-  echo mysql-server mysql-server/root_password_again password $MYSQLTMPROOT | debconf-set-selections;\
-  apt-get install -y mysql-server mysql-client libmysqlclient-dev
-
 # Install GitLab
 RUN cd /home/git;\
-  su git -c "git clone https://github.com/gitlabhq/gitlabhq.git -b 6-4-stable gitlab"
+  su git -c "git clone https://gitlab.com/gitlab-org/gitlab-ce.git -b 6-8-stable gitlab"
 
 # Misc configuration stuff
 RUN cd /home/git/gitlab;\
@@ -56,12 +42,6 @@ RUN cd /home/git/gitlab;\
   chown -R git log/;\
   chmod -R u+rwX log/;\
   chmod -R u+rwX tmp/;\
-  su git -c "mkdir /home/git/gitlab-satellites";\
-  su git -c "mkdir tmp/pids/";\
-  su git -c "mkdir tmp/sockets/";\
-  chmod -R u+rwX tmp/pids/;\
-  chmod -R u+rwX tmp/sockets/;\
-  su git -c "mkdir public/uploads";\
   chmod -R u+rwX public/uploads;\
   su git -c "cp config/unicorn.rb.example config/unicorn.rb";\
   su git -c "cp config/initializers/rack_attack.rb.example config/initializers/rack_attack.rb";\
@@ -70,7 +50,7 @@ RUN cd /home/git/gitlab;\
   su git -c "git config --global core.autocrlf input"
 
 RUN cd /home/git/gitlab;\
-  su git -c "bundle install --deployment --without development test postgres aws"
+  su git -c "bundle install --deployment --without development test mysql aws"
 
 # Install init scripts
 RUN cd /home/git/gitlab;\
