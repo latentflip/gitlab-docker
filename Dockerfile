@@ -18,7 +18,7 @@ RUN mkdir /tmp/ruby;\
   curl ftp://ftp.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0-p451.tar.gz | tar xz;\
   cd ruby-2.0.0-p451;\
   chmod +x configure;\
-  curl https://gist.githubusercontent.com/riocampos/b2669b26016207224f06/raw/0d3c9229eb1083ae08080b21bdf0a7ebaeda5113/readline.patch|patch -p0
+  curl https://gist.githubusercontent.com/riocampos/b2669b26016207224f06/raw/0d3c9229eb1083ae08080b21bdf0a7ebaeda5113/readline.patch|patch -p0;\
   ./configure --disable-install-rdoc;\
   make;\
   make install;\
@@ -31,6 +31,7 @@ RUN adduser --disabled-login --gecos 'GitLab' git
 RUN cd /home/git;\
   su git -c "git clone https://gitlab.com/gitlab-org/gitlab-shell.git -b v1.9.3";\
   cd gitlab-shell;\
+  su git -c "mv config.yml.example config.yml";\
   sed -i -e 's/localhost/127.0.0.1/g' config.yml;\
   su git -c "./bin/install"
 
