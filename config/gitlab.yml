@@ -16,7 +16,7 @@ production: &base
   gitlab:
     ## Web server settings
     host: localhost
-    port: 5000
+    port: 80
     https: false
 
     # Uncomment and customize the last line to run in a non-root path

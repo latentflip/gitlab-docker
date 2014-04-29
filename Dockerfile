@@ -9,7 +9,7 @@ RUN echo deb http://us.archive.ubuntu.com/ubuntu/ precise universe multiverse >>
   echo upstart hold | dpkg --set-selections;\
   apt-get update;\
   apt-get -y upgrade;\
-  apt-get install -y build-essential zlib1g-dev libyaml-dev libssl-dev libgdbm-dev libreadline-dev libncurses5-dev libffi-dev curl openssh-server redis-server checkinstall libxml2-dev libxslt-dev libcurl4-openssl-dev libicu-dev sudo python-docutils logrotate vim postfix git-core postgresql-9.3 postgresql-client libpq-dev
+  apt-get install -y build-essential zlib1g-dev libyaml-dev libssl-dev libgdbm-dev libreadline-dev libncurses5-dev libffi-dev curl openssh-server redis-server checkinstall libxml2-dev libxslt-dev libcurl4-openssl-dev libicu-dev sudo python-docutils nginx logrotate vim postfix git-core postgresql-9.3 postgresql-client libpq-dev
 
 # Install Ruby
 # For info on that patch to readline see this super cool issue https://github.com/sstephenson/ruby-build/issues/526
