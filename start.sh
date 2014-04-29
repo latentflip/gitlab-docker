@@ -17,6 +17,8 @@ rm /home/git/gitlab/tmp/pids/*
 
 # Copy over config files
 cp /srv/gitlab/config/gitlab.yml /home/git/gitlab/config/gitlab.yml
+cp /srv/gitlab/config/nginx.conf /etc/nginx/sites-available/gitlab
+ln -s /etc/nginx/sites-available/gitlab /etc/nginx/sites-enabled/gitlab
 cp /srv/gitlab/config/database.yml /home/git/gitlab/config/database.yml
 chown git:git /home/git/gitlab/config/database.yml && chmod o-rwx /home/git/gitlab/config/database.yml
 
@@ -46,6 +48,9 @@ service postgresql start
 
 # start gitlab
 service gitlab start
+
+# start nginx
+service nginx start
 
 # keep script in foreground
 su git -c "touch /home/git/gitlab/log/production.log"
