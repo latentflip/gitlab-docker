@@ -9,8 +9,7 @@ mkdir -p /var/run/sshd
 /usr/sbin/sshd
 
 # start redis
-redis-server > /dev/null 2>&1 &
-sleep 5
+service redis-server start
 
 # remove PIDs created by GitLab init script
 rm /home/git/gitlab/tmp/pids/*
@@ -39,7 +38,7 @@ ln -s /srv/gitlab/data/postgresql /var/lib/postgresql
 
 # Link gitlab public dir to /srv/gitlab/data
 mv /home/git/gitlab/public /home/git/gitlab/public-tmp
-ln -s /srv/gitlab/data/gitlab_public /home/git/gitlab/public
+ln -s /srv/gitlab/data/gitlab-public /home/git/gitlab/public
 
 # Run the firstrun script
 [[ -s "/srv/gitlab/firstrun.sh" ]] && source "/srv/gitlab/firstrun.sh" && "rm /srv/gitlab/firstrun.sh"

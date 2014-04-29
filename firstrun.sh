@@ -22,10 +22,6 @@ echo CREATE DATABASE gitlabhq_production OWNER git|sudo -u postgres psql -d temp
 # Precompile assets
 cd /home/git/gitlab
 su git -c "bundle exec rake assets:precompile RAILS_ENV=production"
-
-cd /home/git/gitlab
 su git -c "bundle exec rake gitlab:setup force=yes RAILS_ENV=production"
-sleep 5
-su git -c "bundle exec rake db:seed_fu RAILS_ENV=production"
 
 # ================================================================
