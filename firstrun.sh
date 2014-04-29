@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# Set these parameters
-mysqlRoot=RootPassword
-
-# === Do not modify anything in this section ===
-
 # Regenerate the SSH host key
 /bin/rm /etc/ssh/ssh_host_*
 dpkg-reconfigure openssh-server
