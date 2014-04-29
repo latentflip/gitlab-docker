@@ -18,7 +18,7 @@ With Docker installed and running, do the following to obtain GitLab.
 
 ```shell
 $ git clone https://github.com/wraithgar/gitlab-docker.git gitlab
-$ cd gitlab-docker
+$ cd gitlab
 $ docker build -t gitlab .
 ```
 
